@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="182" viewBox="0 0 840 182" role="img" aria-labelledby="title desc">
+<title id="title">Source to build to output</title>
+<desc id="desc">An abstract terminal pipeline; not a portrait or a live build status.</desc>
+<style>
+text { font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; }
+.text { fill: #edf3fa; } .muted { fill: #a6b8ce; } .accent { fill: #80d8db; }
+.reveal { animation: reveal 3.2s ease-out both; }
+.trace { stroke-dasharray: 8 12; animation: trace 3.2s linear 3; }
+.cursor { animation: cursor 1.2s step-end 4; }
+@keyframes reveal { from { opacity: .7; } to { opacity: 1; } }
+@keyframes trace { to { stroke-dashoffset: -80; } }
+@keyframes cursor { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .reveal, .trace, .cursor { animation: none !important; } }
+</style>
+<rect x="1" y="1" width="838" height="180" rx="14" fill="#111c2b" stroke="#31465f"/>
+<text x="32" y="36" font-size="14" class="muted" >$ make something-useful</text><path d="M170 99 H674" stroke="#31465f" stroke-width="2"/><path class="trace" d="M170 99 H674" stroke="#80d8db" stroke-width="2"/><rect x="138" y="66" width="60" height="64" rx="8" fill="#17263a" stroke="#31465f"/><text x="168" y="106" font-size="22" class="accent" text-anchor="middle">{ }</text><text x="168" y="157" font-size="14" class="muted" text-anchor="middle">source</text><rect x="390" y="66" width="60" height="64" rx="8" fill="#17263a" stroke="#31465f"/><text x="420" y="106" font-size="22" class="accent" text-anchor="middle">&gt;_</text><text x="420" y="157" font-size="14" class="muted" text-anchor="middle">build</text><rect x="642" y="66" width="60" height="64" rx="8" fill="#17263a" stroke="#31465f"/><text x="672" y="106" font-size="22" class="accent" text-anchor="middle">[+]</text><text x="672" y="157" font-size="14" class="muted" text-anchor="middle">output</text>
+</svg>

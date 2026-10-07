@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="318" viewBox="0 0 840 318" role="img" aria-labelledby="title desc">
+<title id="title">Public repository snapshot</title>
+<desc id="desc">user: saam-rk; languages: Java / Python / TypeScript; repo stack: FastAPI / Next.js / Android; public repos: 3; followers: 3; repo stars: 0</desc>
+<style>
+text { font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; }
+.text { fill: #edf3fa; } .muted { fill: #a6b8ce; } .accent { fill: #80d8db; }
+.reveal { animation: reveal 3.2s ease-out both; }
+.trace { stroke-dasharray: 8 12; animation: trace 3.2s linear 3; }
+.cursor { animation: cursor 1.2s step-end 4; }
+@keyframes reveal { from { opacity: .7; } to { opacity: 1; } }
+@keyframes trace { to { stroke-dashoffset: -80; } }
+@keyframes cursor { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .reveal, .trace, .cursor { animation: none !important; } }
+</style>
+<rect x="1" y="1" width="838" height="316" rx="14" fill="#111c2b" stroke="#31465f"/>
+<text x="32" y="38" font-size="16" class="accent" >$ profile --public</text><text x="808" y="38" font-size="12" class="muted" text-anchor="end">2026-10-07</text><path d="M32 58 H808" stroke="#31465f"/><g class="reveal" style="animation-delay:0.00s"><text x="32" y="94" font-size="16" class="muted" >user</text><text x="218" y="94" font-size="18" class="text" >saam-rk</text></g><g class="reveal" style="animation-delay:0.08s"><text x="32" y="126" font-size="16" class="muted" >languages</text><text x="218" y="126" font-size="18" class="text" >Java / Python / TypeScript</text></g><g class="reveal" style="animation-delay:0.16s"><text x="32" y="158" font-size="16" class="muted" >repo stack</text><text x="218" y="158" font-size="18" class="text" >FastAPI / Next.js / Android</text></g><g class="reveal" style="animation-delay:0.24s"><text x="32" y="190" font-size="16" class="muted" >public repos</text><text x="218" y="190" font-size="18" class="text" >3</text></g><g class="reveal" style="animation-delay:0.32s"><text x="32" y="222" font-size="16" class="muted" >followers</text><text x="218" y="222" font-size="18" class="text" >3</text></g><g class="reveal" style="animation-delay:0.40s"><text x="32" y="254" font-size="16" class="muted" >repo stars</text><text x="218" y="254" font-size="18" class="text" >0</text></g><text x="32" y="294" font-size="13" class="muted" >Languages: top language per original public project.</text>
+</svg>
