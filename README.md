@@ -7,6 +7,6 @@
 [SWODS](https://github.com/saam-rk/SWODS) — A collaborative photography prototype. Not yet piloted.
 
 <p>
-  <img src="assets/activity.svg" width="100%" alt="Weekly GitHub activity over the past year, shown as a minimal line graph. Exact dates and counts are in data/profile.json."><br>
+  <img src="assets/activity.svg?layout=wide" width="100%" alt="Weekly GitHub activity over the past year, shown as a minimal line graph. Exact dates and counts are in data/profile.json."><br>
   <sub>Weekly activity · past year</sub>
 </p>

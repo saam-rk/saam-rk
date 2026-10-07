@@ -48,12 +48,12 @@ class ProfileTests(unittest.TestCase):
     def test_readme_relative_paths(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         assets = re.findall(r'<img src="([^"]+)"[^>]+alt="[^"]+"', readme)
-        self.assertEqual(assets, ["assets/activity.svg"])
-        self.assertIn('src="assets/activity.svg" width="100%"', readme)
+        self.assertEqual(assets, ["assets/activity.svg?layout=wide"])
+        self.assertIn('src="assets/activity.svg?layout=wide" width="100%"', readme)
         self.assertNotRegex(readme, r'<img[^>]+height=')
         self.assertNotIn("assets/contributions.svg", readme)
         for relative in assets + ["CUSTOMIZE.md"]:
-            self.assertTrue((ROOT / relative).is_file(), relative)
+            self.assertTrue((ROOT / relative.split("?", 1)[0]).is_file(), relative)
         self.assertNotIn("<svg", readme)
         self.assertNotIn("<script", readme)
 
