@@ -1,20 +1,7 @@
 {
   "username": "saam-rk",
-  "tagline": "Small tools. Useful experiments.",
-  "width": 840,
-  "motion_seconds": 3.2,
-  "colors": {
-    "background": "#111c2b",
-    "panel": "#17263a",
-    "border": "#31465f",
-    "text": "#edf3fa",
-    "muted": "#a6b8ce",
-    "accent": "#80d8db",
-    "heat": ["#24354a", "#305c70", "#398597", "#59b5bd", "#a1ece3"]
-  },
-  "technologies": [
-    {"name": "FastAPI", "repo": "Bindery", "source": "https://github.com/saam-rk/Bindery#stack"},
-    {"name": "Next.js", "repo": "swods-erasmus-photo-experience", "source": "https://github.com/saam-rk/swods-erasmus-photo-experience/blob/main/package.json"},
-    {"name": "Android", "repo": "SomnoRoute", "source": "https://github.com/saam-rk/SomnoRoute#requisitos"}
-  ]
+  "width": 640,
+  "height": 64,
+  "motion_seconds": 1.2,
+  "ink": "#7d8590"
 }

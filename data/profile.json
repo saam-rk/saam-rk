@@ -1,38 +1,6 @@
 {
   "username": "saam-rk",
   "as_of": "2026-10-07",
-  "public_repos": 4,
-  "followers": 3,
-  "repositories": [
-    {
-      "name": "Bindery",
-      "language": "Python",
-      "fork": false,
-      "stargazers_count": 0,
-      "html_url": "https://github.com/saam-rk/Bindery"
-    },
-    {
-      "name": "saam-rk",
-      "language": "Python",
-      "fork": false,
-      "stargazers_count": 0,
-      "html_url": "https://github.com/saam-rk/saam-rk"
-    },
-    {
-      "name": "SomnoRoute",
-      "language": "Java",
-      "fork": false,
-      "stargazers_count": 0,
-      "html_url": "https://github.com/saam-rk/SomnoRoute"
-    },
-    {
-      "name": "swods-erasmus-photo-experience",
-      "language": "TypeScript",
-      "fork": false,
-      "stargazers_count": 0,
-      "html_url": "https://github.com/saam-rk/swods-erasmus-photo-experience"
-    }
-  ],
   "calendar_source": "https://github.com/users/saam-rk/contributions",
   "days": [
     {

@@ -1,6 +1,4 @@
-"""Public GitHub metadata and anonymous contribution calendar; standard library only."""
-import json
-import os
+"""Anonymous GitHub contribution calendar; standard library only."""
 import re
 import time
 from datetime import date, timedelta
@@ -10,15 +8,9 @@ from urllib.request import Request, urlopen
 
 
 def request(url: str) -> str:
-    if not url.startswith(("https://api.github.com/", "https://github.com/users/")):
-        raise ValueError("Only GitHub HTTPS endpoints are permitted")
+    if not re.fullmatch(r"https://github\.com/users/[A-Za-z0-9][A-Za-z0-9-]{0,38}/contributions", url):
+        raise ValueError("Only the public GitHub contribution endpoint is permitted")
     headers = {"User-Agent": "github-profile-svg", "Accept-Language": "en-US"}
-    # Never send credentials to the public HTML endpoint.
-    if url.startswith("https://api.github.com/"):
-        headers["Accept"] = "application/vnd.github+json"
-        headers["X-GitHub-Api-Version"] = "2022-11-28"
-        if token := os.environ.get("GITHUB_TOKEN"):
-            headers["Authorization"] = f"Bearer {token}"
     for attempt in range(3):
         try:
             with urlopen(Request(url, headers=headers), timeout=30) as response:
@@ -99,32 +91,14 @@ def validate_days(days):
 def fetch_snapshot(username, today):
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9-]{0,38}", username):
         raise ValueError("Invalid GitHub username")
-    base = f"https://api.github.com/users/{username}"
-    user = json.loads(request(base))
-    repos = []
-    page = 1
-    while True:
-        batch = json.loads(request(f"{base}/repos?type=owner&per_page=100&page={page}"))
-        for repo in batch:
-            if repo["private"] or repo["owner"]["login"].lower() != username.lower():
-                continue
-            repos.append({key: repo[key] for key in (
-                "name", "language", "fork", "stargazers_count", "html_url"
-            )})
-        if len(batch) < 100:
-            break
-        page += 1
     calendar = CalendarParser()
     calendar.feed(request(f"https://github.com/users/{username}/contributions"))
     days = calendar.days()
     if date.fromisoformat(days[-1]["date"]) not in (today, today - timedelta(days=1)):
         raise ValueError("GitHub returned a stale contribution calendar")
     return {
-        "username": user["login"],
+        "username": username,
         "as_of": today.isoformat(),
-        "public_repos": len(repos),
-        "followers": user["followers"],
-        "repositories": sorted(repos, key=lambda repo: repo["name"].lower()),
         "calendar_source": f"https://github.com/users/{username}/contributions",
         "days": days,
     }
