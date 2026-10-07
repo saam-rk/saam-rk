@@ -1,39 +1,31 @@
-# Keeping this workspace yours
+# Customization
 
-Requires Python 3.11+; Actions uses 3.13. No packages to install, so no requirements file.
+The profile is intentionally text-first: three project links and one small activity trace. No cards, stack lists, counters, or external widgets.
+
+- **Words and projects:** edit `README.md`. Descriptions come from the linked public repositories; SWODS remains explicitly a prototype.
+- **Size, color, speed:** edit `width`, `height`, `ink`, and `motion_seconds` in `profile.json`. Match the README image width if you change it. The SVG has a transparent background and a neutral stroke for both GitHub themes.
+- **Displayed data:** `weekly_totals()` in `scripts/artwork.py` groups the calendar by Monday-start weeks. The trace draws once, never loops, respects reduced motion, and stays visible without animation support.
+
+Python 3.11+; no packages to install. From the repository root:
 
 ```sh
-python -m scripts.generate            # deterministic, offline: committed snapshot
-python -m scripts.generate --refresh  # fetch public data, then regenerate all assets
+python -m scripts.generate            # regenerate from the committed snapshot
+python -m scripts.generate --refresh  # fetch current data and regenerate
 python -m unittest discover -s tests -v
 ```
 
-## Change the design
+## Activity data
 
-- **Text:** edit `tagline` in `profile.json`; edit projects and links in `README.md`.
-- **Statistics / displayed data:** `scripts/artwork.py`, especially `terminal()` and `contributions()`. The snapshot is generated, not hand-maintained.
-- **Technologies:** `profile.json` holds curated labels with verified source URLs. They describe repository code, not proficiency. Add evidence with each new label. Labels are shown only while their project remains public and original.
-- **Dimensions:** `width` scales the SVGs proportionally; adjust README image widths too. Internal layout uses an 840-unit `viewBox`; change coordinates/heights in `artwork.py` for a different composition.
-- **Speed:** `motion_seconds` controls fades and the pipeline trace. The short cursor sequence is defined separately in `svg()`. Animations stop, and reduced-motion preferences disable them entirely.
-- **Style:** edit the hex palette in `profile.json`, or the system-font stack in `svg()`. No font downloads, scripts, or external image resources.
-- **Portrait later:** replace `visual()` with a renderer for ASCII rows derived from a photo you choose to provide. Keep the accessible title/description, static final state, and local SVG output. The current pipeline is deliberately abstract, not a likeness.
+The small line shows weekly contribution totals from oldest to newest. Height is linear, from zero to the largest weekly total in the displayed period. First and last weeks may be partial. A quiet week is zero, not missing data. Exact dates and daily counts are in `data/profile.json`; the SVG description also contains the weekly totals.
 
-## Data and scope
+The source is GitHub's anonymous [public calendar](https://github.com/users/saam-rk/contributions), fetched without tokens. GitHub may include anonymized private activity if enabled on the profile, so this is not a public-repositories-only count. No private repository details, follower counts, language rankings, or technology lists are collected.
 
-Public REST endpoints supply owned repositories and followers. Languages are the three most frequent **primary languages per original public project**, alphabetically breaking ties—not a claim about skill or a byte-weighted ranking. Forks and this profile repository are excluded from languages and star totals; the public repository count includes both.
+Generation validates dates, counts, and freshness before writing. Failed requests or changed HTML stop the update rather than replacing real data with zeros. The last committed image stays available. Identical inputs produce identical output.
 
-The contribution source is GitHub's **anonymous public calendar HTML**, fetched without credentials. Exact tooltip counts and intensity levels are stored with dates in `data/profile.json`. GitHub may include anonymized private activity if you enable that on your profile; this is a publicly visible calendar, **not a guaranteed public-repositories-only count**. No private repository names or details are fetched. The SVG labels the actual date range (GitHub may include a partial boundary week). Today can be incomplete.
+## Automation
 
-The parser validates counts, levels, continuous dates, and calendar freshness. If GitHub changes its HTML or requests fail, generation fails rather than publishing invented zeros; the last committed assets remain available. `as_of` is a UTC retrieval date, not a live status indicator. The dated snapshot is intentional for reproducibility and offline testing.
+GitHub Actions uses Python 3.13 and SHA-pinned actions. It refreshes at **06:23 UTC daily**, manually, and on generator/config changes to `main`. Only the main-branch update job has `contents: write`; it commits changed generated files using the built-in token. Pull requests run offline checks with read-only permissions and never publish.
 
-Project descriptions and technology evidence were reviewed against the public Bindery and SomnoRoute READMEs and SWODS package manifest. No professional title, employer, education, years of experience, email, or social handle is asserted. The tagline is editable neutral copy. No personal placeholders appear on the profile; add verified links in README when you want them.
+No secrets need configuring. GitHub may delay schedules, cache images, or disable schedules after 60 days of inactivity. Branch protection must permit the update bot to push if you enable it.
 
-## Updates
-
-`.github/workflows/update-profile.yml` runs at **06:23 UTC daily**, manually from Actions, and on generator/config changes to `main`. It tests, refreshes, validates, and commits only changed SVGs and snapshot data. Actions are pinned to commit SHAs; there are no pip dependencies. Only the update job receives `contents: write`. The built-in `GITHUB_TOKEN` is sufficient; no custom secrets or personal access token are required.
-
-Failures appear in Actions; inspect the failed run and rerun after fixing the source/parser. Scheduled jobs can be delayed, and GitHub can disable schedules in public repos after 60 days of inactivity; re-enable the workflow if necessary. Branch protection that forbids bot pushes needs a compatible repository policy. Concurrent runs are serialized and a conflicting push fails safely rather than force-pushing.
-
-SVGs are embedded as ordinary README images with alt text. Their background and foreground colors are self-contained for both GitHub themes; content remains visible if CSS animation is unavailable. Fine calendar details are naturally smaller on phones. GitHub image caching can delay visible refreshes.
-
-Conceptual reference: [Avi Vashishta's animated profile tutorial](https://www.avivashishta.com/blog/build-animated-github-profile-readme). This implementation uses its local-SVG/public-calendar approach, but original artwork, shared standard-library renderers, no portrait pipeline, and no third-party stats service.
+Conceptual reference: [Avi Vashishta's animated profile tutorial](https://www.avivashishta.com/blog/build-animated-github-profile-readme). The implementation keeps the self-contained SVG approach, but deliberately drops the dashboard composition.

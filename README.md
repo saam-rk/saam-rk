@@ -1,27 +1,13 @@
-<p align="center">
-  <img src="assets/header.svg" width="840" alt="saam-rk — Small tools. Useful experiments.">
-</p>
+### saam-rk
 
-<p align="center">
-  <img src="assets/terminal.svg" width="840" alt="Public GitHub snapshot: project languages, repository technologies, and account statistics.">
-</p>
+[Bindery](https://github.com/saam-rk/Bindery) — Turn documents into books for Kindle.
 
-<p align="center">
-  <img src="assets/visual.svg" width="840" alt="An animated, abstract terminal pipeline: source → build → output.">
-</p>
+[SomnoRoute](https://github.com/saam-rk/SomnoRoute) — An Android alarm for your stop.
 
-### Selected work
+[SWODS](https://github.com/saam-rk/swods-erasmus-photo-experience) — A collaborative photography prototype. Not yet piloted.
 
-Tools for reading, getting around, and exploring ideas on the web.
+<br>
 
-- **[Bindery](https://github.com/saam-rk/Bindery)** — Local document-to-EPUB conversion for Kindle, with Windows OCR and optional, reviewable AI cleanup. `Python · FastAPI`
-- **[SomnoRoute](https://github.com/saam-rk/SomnoRoute)** — Android proximity alarms for public-transport journeys. `Java · Android`
-- **[SWODS](https://github.com/saam-rk/swods-erasmus-photo-experience)** — Multilingual collaborative photography prototype for an Erasmus+ experience. Source-only; not piloted or production-ready. `TypeScript · Next.js`
+<img src="assets/contributions.svg" width="640" alt="Weekly GitHub activity over the past year, shown as a single line. Exact dates and counts are in data/profile.json.">
 
-<p align="center">
-  <img src="assets/contributions.svg" width="840" alt="GitHub contribution calendar, refreshed daily from the publicly visible profile. Exact dates and counts are available in data/profile.json.">
-</p>
-
-[GitHub](https://github.com/saam-rk) · [Repositories](https://github.com/saam-rk?tab=repositories) · [Activity](https://github.com/saam-rk?tab=overview)
-
-<sub>Self-contained SVGs, generated with Python. [Data & customization](CUSTOMIZE.md).</sub>
+<sub>[GitHub activity · weekly, past year](CUSTOMIZE.md#activity-data)</sub>

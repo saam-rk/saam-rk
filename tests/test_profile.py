@@ -36,6 +36,8 @@ class ProfileTests(unittest.TestCase):
     def test_committed_assets_match_deterministic_render(self):
         first = artwork.render_all(self.config, self.snapshot)
         self.assertEqual(first, artwork.render_all(self.config, self.snapshot))
+        self.assertEqual(set(first), {"contributions.svg"})
+        self.assertEqual({path.name for path in (ROOT / "assets").glob("*.svg")}, set(first))
         for name, source in first.items():
             self.assertEqual(source, (ROOT / "assets" / name).read_text(encoding="utf-8"))
             artwork.validate_svg(source)
@@ -46,7 +48,7 @@ class ProfileTests(unittest.TestCase):
     def test_readme_relative_paths(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         assets = re.findall(r'<img src="([^"]+)"[^>]+alt="[^"]+"', readme)
-        self.assertEqual(len(assets), 4)
+        self.assertEqual(len(assets), 1)
         for relative in assets + ["CUSTOMIZE.md"]:
             self.assertTrue((ROOT / relative).is_file(), relative)
         self.assertNotIn("<svg", readme)
@@ -55,7 +57,7 @@ class ProfileTests(unittest.TestCase):
     def test_live_snapshot_is_valid(self):
         data.validate_days(self.snapshot["days"])
         self.assertEqual(self.snapshot["username"], self.config["username"])
-        self.assertEqual(self.snapshot["public_repos"], len(self.snapshot["repositories"]))
+        self.assertEqual(set(self.snapshot), {"username", "as_of", "calendar_source", "days"})
 
     def test_parser_counts_and_attribute_order(self):
         days = sample_days()
@@ -94,44 +96,58 @@ class ProfileTests(unittest.TestCase):
         snapshot = dict(self.snapshot, days=days)
         svg = artwork.contributions(self.config, snapshot)
         artwork.validate_svg(svg)
-        self.assertIn("0 contributions / 0 active days", svg)
-        self.assertIn("2024-02-29", svg)
+        self.assertTrue(all(count == 0 for _, count in artwork.weekly_totals(days)))
+        self.assertIn("2024-02-26: 0", svg)
+        days[59].update(count=3, level=1)
+        self.assertEqual(dict(artwork.weekly_totals(days))[date(2024, 2, 26)], 3)
 
     def test_text_is_escaped(self):
-        config = dict(self.config, tagline='<script>alert("x")</script> & text')
-        source = artwork.header(config, self.snapshot)
+        snapshot = dict(self.snapshot, username='<script>alert("x")</script> & text')
+        source = artwork.contributions(self.config, snapshot)
         artwork.validate_svg(source)
         self.assertNotIn("<script>", source)
         self.assertIn("&lt;script&gt;", source)
 
     def test_config_rejects_unsafe_style(self):
         config = copy.deepcopy(self.config)
-        config["colors"]["accent"] = 'red; background:url(https://example.com)'
+        config["ink"] = 'red; background:url(https://example.com)'
         with self.assertRaises(ValueError):
             generate.validate_config(config)
 
-    def test_profile_and_forks_do_not_inflate_project_stats(self):
-        snapshot = copy.deepcopy(self.snapshot)
-        snapshot["repositories"] += [
-            {"name": self.config["username"], "fork": False, "language": "Fiction", "stargazers_count": 999},
-            {"name": "forked", "fork": True, "language": "Fiction", "stargazers_count": 999},
-        ]
-        svg = artwork.terminal(self.config, snapshot)
-        self.assertNotIn("Fiction", svg)
-        self.assertNotIn("1998", svg)
-
-    def test_api_pagination(self):
-        repo = {"name": "sample", "language": "Python", "fork": False,
-                "stargazers_count": 0, "html_url": "https://github.com/saam-rk/sample",
-                "private": False, "owner": {"login": "saam-rk"}}
+    def test_weekly_totals_preserve_counts_and_partial_weeks(self):
         days = sample_days()
-        responses = [json.dumps({"login": "saam-rk", "followers": 3}),
-                     json.dumps([dict(repo, name=f"r{i}") for i in range(100)]),
-                     json.dumps([repo]), calendar_html(days)]
-        with patch.object(data, "request", side_effect=responses) as request:
+        days[0].update(count=2, level=1)  # Sunday: its own partial week.
+        days[1].update(count=5, level=1)
+        days[7].update(count=3, level=1)
+        weeks = dict(artwork.weekly_totals(days))
+        self.assertEqual(weeks[date(2024, 12, 30)], 2)
+        self.assertEqual(weeks[date(2025, 1, 6)], 8)
+        self.assertEqual(sum(weeks.values()), 10)
+        self.assertTrue(all(monday.weekday() == 0 for monday in weeks))
+
+    def test_fetch_collects_only_calendar(self):
+        days = sample_days()
+        with patch.object(data, "request", return_value=calendar_html(days)) as request:
             result = data.fetch_snapshot("saam-rk", date.fromisoformat(days[-1]["date"]))
-        self.assertEqual(result["public_repos"], 101)
-        self.assertIn("page=2", request.call_args_list[2].args[0])
+        request.assert_called_once_with("https://github.com/users/saam-rk/contributions")
+        self.assertEqual(result["days"], days)
+        self.assertEqual(set(result), {"username", "as_of", "calendar_source", "days"})
+
+    def test_stale_calendar_rejected(self):
+        with patch.object(data, "request", return_value=calendar_html(sample_days())), self.assertRaises(ValueError):
+            data.fetch_snapshot("saam-rk", date(2026, 2, 1))
+
+    def test_trace_has_no_panels_or_labels(self):
+        svg = artwork.contributions(self.config, self.snapshot)
+        self.assertEqual(svg.count("<path "), 1)
+        self.assertNotIn("<rect", svg)
+        self.assertNotIn("<text", svg)
+        self.assertNotIn("infinite", svg)
+        points = re.findall(r"[ML]([\d.]+),([\d.]+)", svg)
+        self.assertEqual(len(points), len(artwork.weekly_totals(self.snapshot["days"])))
+        for x, y in points:
+            self.assertTrue(0 <= float(x) <= self.config["width"])
+            self.assertTrue(0 <= float(y) <= self.config["height"])
 
     def test_network_failure_preserves_outputs(self):
         with patch.object(sys, "argv", ["generate.py", "--refresh"]), \
@@ -141,17 +157,17 @@ class ProfileTests(unittest.TestCase):
             write.assert_not_called()
 
     def test_no_token_sent_to_calendar(self):
-        with patch.dict(data.os.environ, {"GITHUB_TOKEN": "test-only"}), \
+        with patch.dict("os.environ", {"GITHUB_TOKEN": "test-only"}), \
                 patch.object(data, "urlopen") as open_url:
             open_url.return_value.__enter__.return_value.read.return_value = b"ok"
             data.request("https://github.com/users/saam-rk/contributions")
             self.assertNotIn("Authorization", dict(open_url.call_args.args[0].header_items()))
-            data.request("https://api.github.com/users/saam-rk")
-            self.assertEqual(open_url.call_args.args[0].get_header("Authorization"), "Bearer test-only")
 
     def test_disallowed_url(self):
-        with self.assertRaises(ValueError):
-            data.request("file:///etc/passwd")
+        for url in ("file:///etc/passwd", "https://api.github.com/users/saam-rk",
+                    "https://github.com.evil.test/users/saam-rk/contributions"):
+            with self.subTest(url=url), self.assertRaises(ValueError):
+                data.request(url)
 
 
 if __name__ == "__main__":

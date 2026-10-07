@@ -17,16 +17,12 @@ def validate_config(config):
         raise ValueError("Invalid GitHub username")
     if not 320 <= config["width"] <= 1680:
         raise ValueError("Width must be between 320 and 1680")
+    if not 24 <= config["height"] <= 160:
+        raise ValueError("Height must be between 24 and 160")
     if not 0.1 <= config["motion_seconds"] <= 20:
         raise ValueError("Animation duration must be between 0.1 and 20 seconds")
-    if len(config["tagline"]) > 60:
-        raise ValueError("Keep the tagline under 61 characters")
-    colors = config["colors"]
-    for color in [colors[key] for key in ("background", "panel", "border", "text", "muted", "accent")] + colors["heat"]:
-        if not re.fullmatch(r"#[0-9a-fA-F]{6}", color):
-            raise ValueError("Colors must be six-digit hex values")
-    if len(colors["heat"]) != 5:
-        raise ValueError("The contribution palette needs five levels")
+    if not re.fullmatch(r"#[0-9a-fA-F]{6}", config["ink"]):
+        raise ValueError("Ink must be a six-digit hex color")
 
 
 def write_changed(path, content):
