@@ -1,7 +1,7 @@
 {
   "username": "saam-rk",
   "as_of": "2026-10-07",
-  "public_repos": 3,
+  "public_repos": 4,
   "followers": 3,
   "repositories": [
     {
@@ -10,6 +10,13 @@
       "fork": false,
       "stargazers_count": 0,
       "html_url": "https://github.com/saam-rk/Bindery"
+    },
+    {
+      "name": "saam-rk",
+      "language": "Python",
+      "fork": false,
+      "stargazers_count": 0,
+      "html_url": "https://github.com/saam-rk/saam-rk"
     },
     {
       "name": "SomnoRoute",
@@ -1865,8 +1872,8 @@
     },
     {
       "date": "2026-10-07",
-      "count": 1,
-      "level": 1
+      "count": 3,
+      "level": 2
     }
   ]
 }
