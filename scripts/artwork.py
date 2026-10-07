@@ -63,4 +63,4 @@ def validate_svg(source):
 def render_all(config, snapshot):
     source = contributions(config, snapshot)
     validate_svg(source)
-    return {"contributions.svg": source}
+    return {"activity.svg": source}

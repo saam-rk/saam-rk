@@ -36,7 +36,7 @@ class ProfileTests(unittest.TestCase):
     def test_committed_assets_match_deterministic_render(self):
         first = artwork.render_all(self.config, self.snapshot)
         self.assertEqual(first, artwork.render_all(self.config, self.snapshot))
-        self.assertEqual(set(first), {"contributions.svg"})
+        self.assertEqual(set(first), {"activity.svg"})
         self.assertEqual({path.name for path in (ROOT / "assets").glob("*.svg")}, set(first))
         for name, source in first.items():
             self.assertEqual(source, (ROOT / "assets" / name).read_text(encoding="utf-8"))
@@ -48,7 +48,9 @@ class ProfileTests(unittest.TestCase):
     def test_readme_relative_paths(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         assets = re.findall(r'<img src="([^"]+)"[^>]+alt="[^"]+"', readme)
-        self.assertEqual(len(assets), 1)
+        self.assertEqual(assets, ["assets/activity.svg"])
+        self.assertIn(f'width="{self.config["width"]}"', readme)
+        self.assertNotIn("assets/contributions.svg", readme)
         for relative in assets + ["CUSTOMIZE.md"]:
             self.assertTrue((ROOT / relative).is_file(), relative)
         self.assertNotIn("<svg", readme)

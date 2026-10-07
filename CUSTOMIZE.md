@@ -1,6 +1,8 @@
 # Customization
 
-The profile is intentionally text-first: three project links and one small activity trace. No cards, stack lists, counters, or external widgets.
+The profile is intentionally text-first: three project links and one small activity trace beneath them. No cards, calendar grid, stack lists, counters, or external widgets.
+
+`assets/activity.svg` is a 480 × 40 transparent line graph. Its filename is deliberately different from the former calendar asset, avoiding reuse of that image's cached URL.
 
 - **Words and projects:** edit `README.md`. Descriptions come from the linked public repositories; SWODS remains explicitly a prototype.
 - **Size, color, speed:** edit `width`, `height`, `ink`, and `motion_seconds` in `profile.json`. Match the README image width if you change it. The SVG has a transparent background and a neutral stroke for both GitHub themes.
