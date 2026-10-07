@@ -2,10 +2,10 @@
 
 The profile is intentionally text-first: three project links and one small activity trace beneath them. No cards, calendar grid, stack lists, counters, or external widgets.
 
-`assets/activity.svg` is a 480 × 40 transparent line graph. Its filename is deliberately different from the former calendar asset, avoiding reuse of that image's cached URL.
+`assets/activity.svg` is a transparent line graph on an 840 × 64 canvas. It fills the README's available width and scales its height proportionally; the stroke stays thin and readable at every size. Its filename is deliberately different from the former calendar asset, avoiding reuse of that image's cached URL.
 
 - **Words and projects:** edit `README.md`. Descriptions come from the linked public repositories; SWODS remains explicitly a prototype.
-- **Size, color, speed:** edit `width`, `height`, `ink`, and `motion_seconds` in `profile.json`. Match the README image width if you change it. The SVG has a transparent background and a neutral stroke for both GitHub themes.
+- **Size, color, speed:** edit `width`, `height`, `ink`, and `motion_seconds` in `profile.json`. The README image uses `width="100%"`; change the canvas dimensions to adjust its proportions rather than fixing its display height. The SVG has a transparent background and a neutral stroke for both GitHub themes.
 - **Displayed data:** `weekly_totals()` in `scripts/artwork.py` groups the calendar by Monday-start weeks. The trace draws once, never loops, respects reduced motion, and stays visible without animation support.
 
 Python 3.11+; no packages to install. From the repository root:

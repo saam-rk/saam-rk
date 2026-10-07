@@ -49,7 +49,8 @@ class ProfileTests(unittest.TestCase):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         assets = re.findall(r'<img src="([^"]+)"[^>]+alt="[^"]+"', readme)
         self.assertEqual(assets, ["assets/activity.svg"])
-        self.assertIn(f'width="{self.config["width"]}"', readme)
+        self.assertIn('src="assets/activity.svg" width="100%"', readme)
+        self.assertNotRegex(readme, r'<img[^>]+height=')
         self.assertNotIn("assets/contributions.svg", readme)
         for relative in assets + ["CUSTOMIZE.md"]:
             self.assertTrue((ROOT / relative).is_file(), relative)
@@ -142,6 +143,8 @@ class ProfileTests(unittest.TestCase):
     def test_trace_has_no_panels_or_labels(self):
         svg = artwork.contributions(self.config, self.snapshot)
         self.assertEqual(svg.count("<path "), 1)
+        self.assertIn('vector-effect="non-scaling-stroke"', svg)
+        self.assertIn(f'viewBox="0 0 {self.config["width"]} {self.config["height"]}"', svg)
         self.assertNotIn("<rect", svg)
         self.assertNotIn("<text", svg)
         self.assertNotIn("infinite", svg)

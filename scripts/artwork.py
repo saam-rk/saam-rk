@@ -39,7 +39,7 @@ def contributions(config, snapshot):
 @keyframes draw {{ from {{ stroke-dashoffset: 1; }} to {{ stroke-dashoffset: 0; }} }}
 @media (prefers-reduced-motion: reduce) {{ .trace {{ animation: none; }} }}
 </style>
-<path class="trace" d="{' '.join(points)}" fill="none" stroke="{config['ink']}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1"/>
+<path class="trace" d="{' '.join(points)}" fill="none" stroke="{config['ink']}" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1"/>
 </svg>
 '''
 
