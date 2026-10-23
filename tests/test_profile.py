@@ -3,6 +3,7 @@ import json
 import re
 import sys
 import unittest
+import xml.etree.ElementTree as ET
 from datetime import date, timedelta
 from pathlib import Path
 from unittest.mock import patch
@@ -143,7 +144,6 @@ class ProfileTests(unittest.TestCase):
     def test_trace_has_no_panels_or_labels(self):
         svg = artwork.contributions(self.config, self.snapshot)
         self.assertEqual(svg.count("<path "), 1)
-        self.assertIn('vector-effect="non-scaling-stroke"', svg)
         self.assertIn(f'viewBox="0 0 {self.config["width"]} {self.config["height"]}"', svg)
         self.assertNotIn("<rect", svg)
         self.assertNotIn("<text", svg)
@@ -153,6 +153,24 @@ class ProfileTests(unittest.TestCase):
         for x, y in points:
             self.assertTrue(0 <= float(x) <= self.config["width"])
             self.assertTrue(0 <= float(y) <= self.config["height"])
+
+    def test_animated_trace_scales_with_its_dash_pattern(self):
+        svg = artwork.contributions(self.config, self.snapshot)
+        root = ET.fromstring(svg)
+        namespace = "{http://www.w3.org/2000/svg}"
+        trace = root.find(namespace + "path")
+        assert trace is not None
+        self.assertEqual(trace.get("pathLength"), "1")
+        self.assertEqual(trace.get("stroke-dasharray"), "1")
+        # Non-scaling strokes break normalized dash coverage when enlarged.
+        self.assertIsNone(trace.get("vector-effect"))
+        style_element = root.find(namespace + "style")
+        assert style_element is not None and style_element.text is not None
+        style = style_element.text
+        self.assertIn(f"animation: draw {self.config['motion_seconds']}s ease-out both", style)
+        self.assertIn("from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; }", style)
+        self.assertIn("@media (prefers-reduced-motion: reduce)", style)
+        self.assertIn("animation: none", style)
 
     def test_network_failure_preserves_outputs(self):
         with patch.object(sys, "argv", ["generate.py", "--refresh"]), \

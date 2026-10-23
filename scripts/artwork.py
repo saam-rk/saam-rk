@@ -31,6 +31,8 @@ def contributions(config, snapshot):
         'calendar, which may include anonymized private activity. '
         + '; '.join(f'{monday.isoformat()}: {count}' for monday, count in weeks)
     )
+    # Let the stroke and its normalized dash pattern scale together. A
+    # non-scaling stroke can hide the path's tail when the README enlarges it.
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">
 <title id="title">Weekly GitHub activity</title>
 <desc id="desc">{escape(description)}</desc>
@@ -39,7 +41,7 @@ def contributions(config, snapshot):
 @keyframes draw {{ from {{ stroke-dashoffset: 1; }} to {{ stroke-dashoffset: 0; }} }}
 @media (prefers-reduced-motion: reduce) {{ .trace {{ animation: none; }} }}
 </style>
-<path class="trace" d="{' '.join(points)}" fill="none" stroke="{config['ink']}" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1"/>
+<path class="trace" d="{' '.join(points)}" fill="none" stroke="{config['ink']}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1"/>
 </svg>
 '''
 
