@@ -4,8 +4,6 @@
 
 [SomnoRoute](https://github.com/saam-rk/SomnoRoute) — An Android alarm for your stop.
 
-[SWODS](https://github.com/saam-rk/SWODS) — A collaborative photography prototype. Not yet piloted.
-
 [esp-usage](https://github.com/saam-rk/esp-usage) — Shows your remaining Claude Code and Codex usage on a tiny OLED screen.
 
 [LM Landing](https://github.com/saam-rk/larping-masters-space-apps) — NASA Space Apps 2026 team project: CLPS Lunar Mission Browser.
